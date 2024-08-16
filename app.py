@@ -48,7 +48,7 @@ def index():
             "content": {
                 "subject": "Welcome to our service",
                 "plainText": f"Hello {firstname},\n\nThank you for registering with us!\n\nTo unsubscribe, click here: {url_for('unsubscribe', _external=True)}",
-                "html": f"<html><h1>Hello {firstname},</h1><p>Thank you for registering with us!</p><p>To unsubscribe, click <a href='{url_for('unsubscribe', _external=True)}'>here</a>.</p></html>"
+                "html": f"<html><p>Hello {firstname},</p><p>Thank you for registering with us!</p><p>To unsubscribe, click <a href='{url_for('unsubscribe', _external=True)}'>here</a>.</p></html>"
             },
             "recipients": {
                 "to": [
