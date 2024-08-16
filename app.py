@@ -83,6 +83,32 @@ def unsubscribe():
         for entity in entities:
             table_client.delete_entity(partition_key=entity['PartitionKey'], row_key=entity['RowKey'])
             logging.debug("Unsubscribed email: %s", email)
+            
+            # Send confirmation email
+            message = {
+                "content": {
+                    "subject": "You have been unsubscribed",
+                    "plainText": f"Hello,\n\nYou have successfully unsubscribed from our service.",
+                    "html": f"<html><p>Hello,</p><p>You have successfully unsubscribed from our service.</p></html>"
+                },
+                "recipients": {
+                    "to": [
+                        {
+                            "address": email,
+                            "displayName": entity['firstname']
+                        }
+                    ]
+                },
+                "senderAddress": app.config['AZURE_COMMUNICATION_SERVICE_SENDER']
+            }
+            
+            try:
+                logging.debug("Sending unsubscribe confirmation email to %s", email)
+                poller = email_client.begin_send(message)
+                result = poller.result()
+                logging.debug("Unsubscribe confirmation email sent successfully: %s", result)
+            except Exception as e:
+                logging.error("Failed to send unsubscribe confirmation email: %s", e)
         
         return redirect(url_for('unsubscribe_success'))
     
