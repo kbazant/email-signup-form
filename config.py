@@ -1,0 +1,11 @@
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+class Config:
+    AZURE_CONNECTION_STRING = os.getenv('AZURE_CONNECTION_STRING')
+    AZURE_COMMUNICATION_SERVICE_KEY = os.getenv('AZURE_COMMUNICATION_SERVICE_KEY')
+    AZURE_COMMUNICATION_SERVICE_ENDPOINT = os.getenv('AZURE_COMMUNICATION_SERVICE_ENDPOINT')
+    AZURE_COMMUNICATION_SERVICE_SENDER = os.getenv('AZURE_COMMUNICATION_SERVICE_SENDER')
