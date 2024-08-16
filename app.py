@@ -47,8 +47,8 @@ def index():
         message = {
             "content": {
                 "subject": "Welcome to our service",
-                "plainText": f"Hello {firstname},\n\nThank you for registering with us!",
-                "html": f"<html><p>Hello {firstname},</p><p>Thank you for registering with us!</p></html>"
+                "plainText": f"Hello {firstname},\n\nThank you for registering with us!\n\nTo unsubscribe, click here: {url_for('unsubscribe', _external=True)}",
+                "html": f"<html><h1>Hello {firstname},</h1><p>Thank you for registering with us!</p><p>To unsubscribe, click <a href='{url_for('unsubscribe', _external=True)}'>here</a>.</p></html>"
             },
             "recipients": {
                 "to": [
@@ -72,6 +72,25 @@ def index():
         return redirect(url_for('index'))
     
     return render_template('signup.html')
+
+@app.route('/unsubscribe', methods=['GET', 'POST'])
+def unsubscribe():
+    if request.method == 'POST':
+        email = request.form['email']
+        
+        # Query the table to find the entity with the given email
+        entities = table_client.query_entities(f"PartitionKey eq 'subscribers' and email eq '{email}'")
+        for entity in entities:
+            table_client.delete_entity(partition_key=entity['PartitionKey'], row_key=entity['RowKey'])
+            logging.debug("Unsubscribed email: %s", email)
+        
+        return redirect(url_for('unsubscribe_success'))
+    
+    return render_template('unsubscribe.html')
+
+@app.route('/unsubscribe-success')
+def unsubscribe_success():
+    return "You have successfully unsubscribed."
 
 if __name__ == '__main__':
     app.run()
