@@ -164,3 +164,4 @@ cython_debug/
 .env
 .deployment
 settings.json
+.DS_Store
